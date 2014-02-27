@@ -368,24 +368,26 @@ proc_move() {
             proc_log "Error: Rsync retries exceeded while copying $source_release from $source_release_path into $dest_release_path."
             proc_debug "Error: Rsync retries exceeded while copying $source_release from $source_release_path into $dest_release_path."
             proc_debug "Quitting and you should check why this happened on a simple copy."
+            sleep 5
             proc_exit
         fi
         rsync_retries=$((rsync_retries + 1))
     done
 
-    num_files_source="`ls -1 "$source_release_path/$source_release" | wc -l | tr -d ' '`"
-    num_files_dest="`ls -1 "$dest_release_path/$source_release" | wc -l | tr -d ' '`"
-    if [ "$num_files_source" != "$num_files_dest" ]; then
-      sleep 5
-      num_files_source="`ls -1 "$source_release_path/$source_release" | wc -l | tr -d ' '`"
-      num_files_dest="`ls -1 "$dest_release_path/$source_release" | wc -l | tr -d ' '`"
-      if [ "$num_files_source" != "$num_files_dest" ]; then
-        proc_log "Error: After copying $source_release from $source_release_path into $dest_release_path, the number of files does not match up. Source:$num_files_source Dest:$num_files_dest"
-        proc_debug "Error. After copying $source_release from $source_release_path into $dest_release_path, the number of files does not match up. Source:$num_files_source Dest:$num_files_dest"
-        proc_debug "Quitting and you should check why this happened on a simple copy."
-        proc_exit
-      fi
-    else
+    ## Verification no longer required when using rsync
+    #num_files_source="`ls -1 "$source_release_path/$source_release" | wc -l | tr -d ' '`"
+    #num_files_dest="`ls -1 "$dest_release_path/$source_release" | wc -l | tr -d ' '`"
+    #if [ "$num_files_source" != "$num_files_dest" ]; then
+    #  sleep 5
+    #  num_files_source="`ls -1 "$source_release_path/$source_release" | wc -l | tr -d ' '`"
+    #  num_files_dest="`ls -1 "$dest_release_path/$source_release" | wc -l | tr -d ' '`"
+    #  if [ "$num_files_source" != "$num_files_dest" ]; then
+    #    proc_log "Error: After copying $source_release from $source_release_path into $dest_release_path, the number of files does not match up. Source:$num_files_source Dest:$num_files_dest"
+    #    proc_debug "Error. After copying $source_release from $source_release_path into $dest_release_path, the number of files does not match up. Source:$num_files_source Dest:$num_files_dest"
+    #    proc_debug "Quitting and you should check why this happened on a simple copy."
+    #    proc_exit
+    #  fi
+    #else
 
       ## Copy verified. Remove releases from original location.
       rm -rf "$source_release_path/$source_release"
@@ -396,7 +398,7 @@ proc_move() {
         chmod $CHMOD_OPTIONS "$dest_release_path/$source_release"
       fi
 
-    fi
+    #fi
   fi
 
   if [ "$DEBUG" = "TRUE" ]; then IGNORES="$IGNORES|::$source_release::"; fi
