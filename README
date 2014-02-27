@@ -81,15 +81,16 @@ If you want announce to irc on move and delete, point this to your glftpd.log
 file and read README.announce
 
 
-COPY_OPTIONS="-rf --preserve=timestamps"
+RSYNC_OPTIONS="-ra"
 
-We do a cp on the releases (copy) and the verify that its all there.
-Once verified, it runs rm -rf on the releases in its original location.
-This is where you set which options the cp binary runs with.
-The default '--preserve=timestamps' only seems to work on RedHat and
-perhaps some other distro. The only setting that MUST be here is -r for
-recursive copy. Oh, and unless you want to anwer "yes" to questions, -f is good too =)
-For Debian, you apparently want to use "-rf --preserve" - Thanks DaShizNit.
+Options to pass to rsync, not many reasons to change this. You may
+like to add -c to use checksum validation. Will cause a large slow down
+and additional traffic though.
+
+
+MAX_RSYNC_RETRIES="10"
+
+Maximum number of times rsync will be retried to successfully copy a release.
 
 
 CHOWN_OPTIONS="0:400"
