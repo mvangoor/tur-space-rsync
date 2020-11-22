@@ -2,7 +2,7 @@
 VER=1.1
 
 ## Set where tur-space.conf is located here.
-config=/glftpd/bin/tur-space.conf
+config=/glftpd/etc/tur-space.conf
 
 ###############################################################################
 # No changes should be needed under here.                                     #
@@ -297,7 +297,7 @@ proc_delete() {
       proc_announce "TSD: \"${source_release}\" \"${check_release_size}\" \"${source_release_path}\" \"${source_name}\""
 
       if [ "$SECURITY_PATH" ]; then
-        if [ -z "`echo "${source_release_path}/${source_release}" | grep "${SECURITY_PATH}"`" ]; then
+        if [ -z "`echo "${source_release_path}/${source_release}" | grep -E "${SECURITY_PATH}"`" ]; then
           proc_log "Error: Tried to delete \"${source_release_path}/${source_release}\" but that is outside the SECURITY_PATH (${SECURITY_PATH}) - Aborting !"
           exit 1
         fi
@@ -335,14 +335,14 @@ proc_move() {
   most_size="$5"
 
   if [ "$SECURITY_PATH" ]; then
-    if [ -z "`echo "${source_release_path}/${source_release}" | grep "${SECURITY_PATH}"`" ]; then
+    if [ -z "`echo "${source_release_path}/${source_release}" | grep -E "${SECURITY_PATH}"`" ]; then
       proc_log "Error: Tried to move \"${source_release_path}/${source_release}\" but that is outside the SECURITY_PATH (${SECURITY_PATH}) - Aborting !"
       exit 1
     else
       proc_log "Test: \"${source_release_path}/${source_release}\" seems to be within ${SECURITY_PATH}"
     fi
 
-    if [ -z "`echo "${dest_release_path}" | grep "${SECURITY_PATH}"`" ]; then
+    if [ -z "`echo "${dest_release_path}" | grep -E "${SECURITY_PATH}"`" ]; then
       proc_log "Error: Tried to move TO \"${dest_release_path}\" but that is outside the SECURITY_PATH (${SECURITY_PATH}) - Aborting !"
       exit 1
     fi
